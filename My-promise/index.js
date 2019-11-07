@@ -10,12 +10,16 @@ class MyPromise {
 
     this.resolvedQueues = [];
     this.rejectedQueues = [];
+    this.finallyQueues = [];
+
 
     let resolve = (val) => {
+      
       if (this.status == MyPromise.PENDING) {
         this.value = val;
         this.status = MyPromise.RESOLVED;
         this.resolvedQueues.forEach(cb => cb(this.value))
+        _finally(this.value);
       }
     }
 
@@ -24,7 +28,12 @@ class MyPromise {
         this.reason = reason;
         this.status = MyPromise.REJECTED;
         this.rejectedQueues.forEach(cb => cb(this.reason))
+        _finally(this.reason);
       }
+    }
+
+    let _finally = (val) => {
+      this.rejectedQueues.forEach(cb => cb(val))
     }
 
     try{
@@ -100,6 +109,12 @@ class MyPromise {
   catch(fn){
     return this.then(null,fn);
   }
+
+  finally(finallyHandle) {
+    setTimeout(() => {
+      this.finallyQueues.push(finallyHandle);
+    }, 0);
+  }
 }
 
 MyPromise.PENDING = 'pending';
@@ -137,6 +152,30 @@ function resolvePromise(promise2, x, resolved, rejected) {
   } else {
     resolved(x);
   }
+}
+
+//resolve方法
+MyPromise.resolve = function(val){
+  return new Promise((resolve,reject)=>{
+    resolve(val)
+  });
+}
+//reject方法
+MyPromise.reject = function(val){
+  return new Promise((resolve,reject)=>{
+    reject(val)
+  });
+}
+
+let pTEST;
+//race方法 
+MyPromise.race = function(promises){
+  pTEST = new Promise((resolve,reject)=>{
+    for(let i=0;i<promises.length;i++){
+      promises[i].then(resolve,reject)
+    };
+  });
+  return pTEST;
 }
 
 // 执行测试用例需要用到的代码

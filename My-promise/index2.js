@@ -91,15 +91,33 @@ MyPromise.RESOLVED = 'resolved';
 MyPromise.REJECTED = 'rejected';
 
 function resolvePromise(promise2, x, resolved, rejected) {
-  if (x instanceof MyPromise) {
-    if (x.status = MyPromise.PENDING) {
-      x.then(y => {
-        resolvePromise(promise2, y, resolved, rejected);
-      }, err => {
-        rejected(err);
-      })
-    } else {
-      x.then(resolved, rejected);
+  if(x === promise2){
+    return rejected(new TypeError('Chaining cycle detected for promise'));
+  }
+
+  let called = false;
+
+  if (x != null && (typeof x === 'function' || typeof x === 'object')) {
+    try {
+      then = x.then;
+
+      if (typeof then === 'function') {
+        then.call(x, y => {
+          if (called) return;
+          called = true;
+          resolvePromise(promise2, y, resolved, rejected)
+        }, err => {
+          if(called)return;
+          called = true;
+          rejected(err);
+        })
+      } else {
+        resolved(x);
+      }
+    } catch(err) {
+      if (called) return;
+      called = true;
+      rejected(err);
     }
   } else {
     resolved(x);

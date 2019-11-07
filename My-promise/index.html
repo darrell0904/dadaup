@@ -8,37 +8,98 @@
 </head>
 <body>
   <h1>我的promise</h1>
-  <script src="./index2.js"></script>
+  <script src="./index.js"></script>
   <script>
     var p1 = new MyPromise((resolved, rejected) => {
         setTimeout(() => {
+          console.log('----执行了1---');
           resolved('---p1---');
-      }, 1000); 
+      }, 400); 
     })
 
-    var p2 = function(data) {
-      console.log(data);
-      return new MyPromise((resolved, rejected) => {
-          setTimeout(() => {
-            resolved('---p2---');
-          }, 1000); 
-      });
-    }
+    p1.then(res => {
+      console.log('---res---', res);
+    }).finally(res => {
+      console.log('---fin---', res);
+    })
 
-    var p3 = function(data) {
-      console.log(data);
-      return new MyPromise((resolved, rejected) => {
-          setTimeout(() => {
-            resolved('---p3---');
-          }, 1000); 
-      });
-    }
+    // var p2 = new MyPromise((resolved, rejected) => {
+    //     setTimeout(() => {
+    //       console.log('----执行了2---');
+    //       resolved('---p2---');
+    //   }, 200); 
+    // })
 
-    var p4 = function(data) {
-      console.log(data);
-    }
+    // var p3 = new MyPromise((resolved, rejected) => {
+    //     setTimeout(() => {
+    //       console.log('----执行了3---');
+    //       resolved('---p3---');
+    //   }, 300); 
+    // })
 
-    p1.then(p2).then(p3).then(p4);
+
+    // var p2 = function(data) {
+    //   console.log(data);
+    //   return new MyPromise((resolved, rejected) => {
+    //       setTimeout(() => {
+    //         resolved('---我要把它成功掉---');
+    //       }, 1000);
+    //   });
+
+    //   // return {
+    //   //     then: function(resolve, reject) {
+    //   //       console.log('---resolve---', resolve);
+    //   //       console.log('---reject---', reject);
+
+    //   //       reject('我要把它失败掉')
+
+    //   //       resolve('我是thenable对像！！！');
+    //   //     }
+    //   // }
+    // }
+
+    // var p3 = function(data) {
+    //   console.log(data);
+    //   return new MyPromise((resolved, rejected) => {
+    //       setTimeout(() => {
+    //         resolved('---p3---');
+    //       }, 2000); 
+    //   });
+    // }
+
+    // MyPromise.race([p1, p2, p3]).then(res => {
+    //   console.log('---res---', res);
+    // })
+
+
+
+    // var error = function(error) {
+    //   console.log('---error---', error);
+    //   return error
+    // }
+
+    // var p4 = function(data) {
+    //   console.log('---p4', data);
+    // }
+
+    // // p1.then(p2, error).then(p4, error);
+
+    // // var ptest = p1.then(p2, error);
+    
+
+    
+
+    // setTimeout(() => {
+    //   console.log('---1----');
+    // }, 0);
+
+    // var p5 = new Promise((resolved, rejected) => {
+    //   resolved('---p1---');
+    // })
+
+    // p5.then(res => {
+    //   console.log('---res---', res)
+    // });
     
 
     // p1.then(res => {
@@ -49,6 +110,12 @@
     // }).then(res => {
     //   console.log('---res2---', res);
     //   return 1;
+    // })
+
+    // p1.then(res => {
+    //   console.log('---res---', res);
+    // }, error => {
+    //   console.log('---error---', error);
     // })
   </script>
 </body>
