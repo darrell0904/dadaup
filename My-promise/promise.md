@@ -696,14 +696,14 @@ MyPromise.deferred = function() {
    // 在 resolve 和 reject 方法中循环执行 this.finallyQueues这个数组的方法
 
 
+   第二个方法：
 
+   finally(fn){
+      return this.then(fn, fn);
+   }
    ```
 
    ​
-
-
-
-
 
 
 
