@@ -8,7 +8,7 @@ module.exports = {
   mode: 'development',
   // 入口文件
   entry: {
-    pagination: './src/index.js'
+    pagination: './src/index.ts'
   },
   // 出口文件
   output: {
@@ -16,6 +16,9 @@ module.exports = {
     filename: "pagination.min.js",
     libraryTarget: 'umd',
     library: 'pagination'
+  },
+  resolve: {
+    extensions: [ '.ts', '.tsx', '.js', '.json']
   },
   // 对应的插件
   plugins: [
@@ -36,13 +39,27 @@ module.exports = {
       {
         test: /\.js$/,
         include: path.join(__dirname , 'src'),
-        exclude: /node_modules/,
+        exclude: /(node_modules|bower_components)/,
         use: ['babel-loader']
       },
       {
+        test: /\.(ts|tsx)$/,
+        include: path.join(__dirname , 'src'),
+        exclude: /(node_modules|bower_components)/,
+        use: ['ts-loader']
+      },
+      {
+        test: /\.(ts|tsx)?$/,
+        include: path.join(__dirname , 'src'),
+        exclude: /(node_modules|bower_components)/,
+        use: [{
+          loader: 'tslint-loader',
+          options: {},
+        }],
+      },
+      {
         test: /\.less$/,
-        // include: path.join(__dirname , 'style'),
-        exclude: /node_modules/,
+        exclude: /(node_modules|bower_components)/,
         use: [{
           loader: 'style-loader'
         }, {
@@ -54,3 +71,8 @@ module.exports = {
     ]
   }
 }
+
+/**
+ * 使用 typescript 
+ * 
+ */

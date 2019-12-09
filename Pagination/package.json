@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node test/test.js",
     "dev": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack",
+    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +29,12 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "style-loader": "^0.21.0",
+    "ts-loader": "^6.2.1",
+    "tslint": "^5.20.1",
+    "tslint-loader": "^3.5.4",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.7.3",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "webpack": "^4.16.3",
     "webpack-cli": "^3.1.0",

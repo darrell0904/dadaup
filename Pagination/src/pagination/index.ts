@@ -1,8 +1,10 @@
 import './index.less';
 
 class Pagination {
+  private options: any;
+  private pageElement: any;
 
-	constructor(selector, options = {}) {
+	constructor(selector: any, options = {}) {
     // 默认配置
     this.options = {
       curr: 1, // 当前页面
@@ -14,7 +16,7 @@ class Pagination {
     this.init(selector);
   }
 
-  static getClassName() {
+  private static getClassName() {
   	return {
 	    ITEM: 'pagination-item',
 	    LINK: 'pagination-link',
@@ -22,16 +24,16 @@ class Pagination {
   }
 
   // 模仿jQuery $()
-  $(selector, context) {
+  private $(selector:any, context?:any) {
     context = arguments.length > 1 ? context : document;
     return context ? context.querySelectorAll(selector) : null;
   }
 
-  addFragmentAfter (fragment, datas) {
+  private addFragmentAfter (fragment:any, datas:any) {
     fragment.appendChild(this.createHtml(datas));
   }
 
-  createHtml (curpage) {
+  private createHtml (curpage:any) {
     let fragment = document.createDocumentFragment();
     let liEle = document.createElement("li");
     let aEle = document.createElement("a");
@@ -52,7 +54,8 @@ class Pagination {
     return fragment;
   }
 
-  init (selector) {
+  private init (selector:any) {
+    console.log('---selector---', selector);
   	// 分页器元素
     this.pageElement = this.$(selector)[0];
 
@@ -69,8 +72,6 @@ class Pagination {
   }
 }
 
-const pagination = new Pagination('#pagination', {});
+const pagination = new Pagination('#pagination');
 
-
-
-// export default Pagination;
+export default Pagination;
