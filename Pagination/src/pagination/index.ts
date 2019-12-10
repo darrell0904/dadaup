@@ -1,4 +1,5 @@
-import './index.less';
+import './styles/index.less';
+// import './fonts/iconfont.less';
 
 class Pagination {
   private options: any;
@@ -49,13 +50,13 @@ class Pagination {
 
     fragment.appendChild(liEle);
 
-    console.log('---fragment---', fragment);
+    // console.log('---fragment---', fragment);
 
     return fragment;
   }
 
   private init (selector:any) {
-    console.log('---selector---', selector);
+    // console.log('---selector---', selector);
   	// 分页器元素
     this.pageElement = this.$(selector)[0];
 

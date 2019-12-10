@@ -59,7 +59,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         use: [{
           loader: 'style-loader'
         }, {
@@ -67,6 +67,10 @@ module.exports = {
         }, {
           loader: 'less-loader'
         }]
+      },
+      {
+        test: /\.(eot|woff2?|woff|ttf|svg|otf)$/,
+        use: ['file-loader'],
       }
     ]
   }
