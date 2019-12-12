@@ -10,5 +10,101 @@
 	<div id="pagination" class="pagination"></div>
 
 	<li><span class="iconfont icon-left"></span></li>
+
+	<script>
+		let total = 30;
+		for (let i = 1; i <= total; i++) {
+			showPages(i, total, 2)
+		}
+
+		function showPages (current, allPages, pageBufferSize) {
+
+			let str = '';
+
+			if (allPages <= 5 + pageBufferSize * 2) {
+				for (let i = 1; i <= allPages; i++) {
+						str = str + ' ' + i;
+				}
+			} else {
+				let left = Math.max(1, current - pageBufferSize);
+				let right = Math.min(current + pageBufferSize, allPages);
+				
+				if (current - 1 <= pageBufferSize) {
+					right = 1 + pageBufferSize * 2;
+				}
+
+				if (allPages - current <= pageBufferSize) {
+					left = allPages - pageBufferSize * 2;
+				}
+
+				for (let i = left; i <= right; i++) {
+					str = str + ' ' + i;
+				}
+
+				if (current - 1 >= pageBufferSize * 2 && current !== 1 + 2) {
+					str = '... ' + str;
+				}
+
+				if (allPages - current >= pageBufferSize * 2 && current !== allPages - 2) {
+					str = str + ' ...';
+				}
+
+				if (left !== 1) {
+					str = 1 + ' ' + str;
+				}
+
+				if (right !== allPages) {
+					str = str + ' ' + allPages;
+				}
+			}
+
+			return str.trim();
+		}
+
+		function showPages1 (page, total, show) {
+			var str = '';
+			if (page < show + 1) {
+					for (var i = 1; i <= show * 2 + 1; i++) {
+							str = str + ' ' + i;
+					}
+			} else if (page > total - show) {
+					for (var i = total - show * 2; i <= total; i++) {
+							str = str + ' ' + i;
+					}
+			} else {
+					for (var i = page - show; i <= page + show; i++) {
+							str = str + ' ' + i;
+					}
+			}
+			return str.trim();
+		}
+
+		function showPages2 (page, total, show) {
+			var str = page + '';
+			for (var i = 1; i <= show; i++) {
+					if (page - i > 1) {
+							str = page - i + ' ' + str;
+					}
+					if (page + i < total) {
+							str = str + ' ' + (page + i);
+					}
+			}
+			if (page - (show + 1) > 1) {
+					str = '... ' + str;
+			}
+			if (page > 1) {
+					str = 1 + ' ' + str;
+			}
+			if (page + show + 1 < total) {
+					str = str + ' ...';
+			}
+			if (page < total) {
+					str = str + ' ' + total;
+			}
+			return str;
+		}
+
+
+	</script>
 </body>
 </html>
