@@ -1,7 +1,7 @@
 // 一些配置参数
 // 解释在 option.ts 上
 
-export interface Pagination {
+export interface PaginationConfig {
   current?: number
 
   defaultCurrent?: number
@@ -30,7 +30,7 @@ export interface Pagination {
 
   size?: string
 
-  total?: number
+  total: number
 
   onChange?: (page: number, pageSize: number) => void
 

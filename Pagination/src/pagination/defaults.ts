@@ -1,7 +1,7 @@
-import { Pagination } from './types/index'
+import { PaginationConfig } from './types/index'
 import { noop } from './helpers/utils'
 
-const defaults: Pagination = {
+const defaults: PaginationConfig = {
   defaultCurrent: 1,
 
   defaultPageSize: 10,
@@ -24,3 +24,5 @@ const defaults: Pagination = {
 
   onShowSizeChange: noop,
 }
+
+export default defaults;

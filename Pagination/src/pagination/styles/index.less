@@ -1,34 +1,263 @@
 @import "../fonts/iconfont.less";
 
-.pagination {
-  margin: 24px 0;
-  text-align: center;
-  font-size: 0;
-  .pagination-item {
+.darrell-pagination {
+  font-size: 14px;
+  font-variant: tabular-nums;
+  margin-left: 520px;
+  margin-top: 120px;
+  
+  .darrell-pagination-item {
     display: inline-block;
+    min-width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    font-family: Arial;
+    line-height: 30px;
+    text-align: center;
     vertical-align: middle;
-    margin: 0 4px;
-    .pagination-link {
-      box-sizing: content-box;
-      display: inline-block;
-      padding: 0 8px;
-      min-width: 20px;
-      height: 32px;
-      line-height: 32px;
-      border-radius: 16px;
-      font-size: 16px;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    outline: 0;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    .darrell-pagination-link {
+      display: block;
+      padding: 0 6px;
+      color: rgba(0,0,0,0.65);
+      -webkit-transition: none;
+      transition: none;
+      text-decoration: none;
+      background-color: transparent;
+      outline: none;
       cursor: pointer;
-      &:link {
-        color: #555;
+    }
+
+    &.darrell-pagination-item-active {
+      font-weight: 500;
+      background: #fff;
+      border-color: #1890ff;
+
+      a {
+        color: #1890ff;
       }
-      &:hover {
-        background-color: #eee;
-        color: #42b983;
-      }
-      &.current {
-        background-color: #eee;
-        color: #42b983;
+
+    }
+
+    &:hover {
+      border-color: #1890ff;
+      transition: all .3s;
+
+      a {
+        color: #1890ff;
       }
     }
   }
+
+  .darrell-pagination-prev,
+  .darrell-pagination-next {
+    display: inline-block;
+    min-width: 32px;
+    height: 32px;
+    color: rgba(0,0,0,0.65);
+    font-family: Arial;
+    line-height: 32px;
+    text-align: center;
+    vertical-align: middle;
+    list-style: none;
+    border-radius: 2px;
+    cursor: pointer;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    position: relative;
+    margin-right: 8px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+
+    .darrell-pagination-link {
+      display: block;
+      // padding: 0 6px;
+      color: rgba(0,0,0,0.65);
+      -webkit-transition: none;
+      transition: none;
+      text-decoration: none;
+      background-color: transparent;
+      outline: none;
+      cursor: pointer;
+    }
+
+    &:hover {
+      border-color: #1890ff;
+      transition: all .3s;
+
+      a {
+        color: #1890ff;
+      }
+    }
+  }
+
+  .darrell-pagination-jump-prev,
+  .darrell-pagination-jump-next {
+    display: inline-block;
+    min-width: 32px;
+    height: 32px;
+    color: rgba(0,0,0,0.65);
+    font-family: Arial;
+    line-height: 32px;
+    text-align: center;
+    vertical-align: middle;
+    list-style: none;
+    border-radius: 2px;
+    cursor: pointer;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    position: relative;
+    margin-right: 8px;
+
+    .darrell-pagination-item-ellipsis {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: block;
+      margin: auto;
+      color: rgba(0,0,0,0.25);
+      letter-spacing: 4px;
+      text-align: center;
+      text-indent: .13em;
+      opacity: 1;
+      -webkit-transition: all .2s;
+      transition: all .2s;
+      text-decoration: none;
+    }
+
+    .darrell-pagination-item-link-icon {
+      font-size: 12px;
+      font-size: 12px \9;
+      -webkit-transform: scale(1) rotate(0deg);
+      -ms-transform: scale(1) rotate(0deg);
+      transform: scale(1) rotate(0deg);
+      color: #1890ff;
+      letter-spacing: -1px;
+      opacity: 0;
+      -webkit-transition: all .2s;
+      transition: all .2s;
+      display: none;
+    }
+
+    &:hover {
+      .darrell-pagination-item-link-icon {
+        opacity: 1;
+        display: inline-block;
+        color: #1890ff;
+      }
+
+      .darrell-pagination-item-ellipsis {
+        opacity: 0;
+      }
+    }
+  }
+
+  .darrell-pagination-prev,
+  .darrell-pagination-next {
+    outline: 0;
+  }
+
+  .darrell-pagination-disabled,
+  .darrell-pagination-disabled:hover,
+  .darrell-pagination-disabled:focus {
+    cursor: not-allowed;
+  }
+
+  // 禁用
+  &.darrell-pagination-disabled {
+    cursor: not-allowed;
+
+    .darrell-pagination-prev,
+    .darrell-pagination-next,
+    .darrell-pagination-item {
+      background: #f5f5f5;
+      border-color: #d9d9d9;
+      cursor: not-allowed;
+
+      a {
+        color: rgba(0,0,0,0.25);
+        background: transparent;
+        border: none;
+        cursor: not-allowed;
+      }
+    }
+
+    .darrell-pagination-jump-prev,
+    .darrell-pagination-jump-next {
+      cursor: not-allowed;
+
+      a {
+        color: rgba(0,0,0,0.25);
+        background: transparent;
+        border: none;
+        cursor: not-allowed;
+      }
+
+      &:hover {
+        .darrell-pagination-item-link-icon {
+          opacity: 0;
+          display: none;
+        }
+  
+        .darrell-pagination-item-ellipsis {
+          opacity: 1;
+        }
+      }
+    }
+
+    .darrell-pagination-item-active {
+      background: #dbdbdb;
+      border-color: transparent;
+
+      a {
+        color: #fff;
+      }
+    }
+  }
+
+  // mini
+  &.mini {
+    .darrell-pagination-prev,
+    .darrell-pagination-next {
+      min-width: 24px;
+      height: 24px;
+      margin: 0;
+      line-height: 24px;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .darrell-pagination-item:not(.darrell-pagination-item-active) {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .darrell-pagination-item {
+      min-width: 24px;
+      height: 24px;
+      margin: 0;
+      line-height: 22px;
+    }
+
+    .darrell-pagination-jump-prev,
+    .darrell-pagination-jump-next {
+      height: 24px;
+      margin-right: 0;
+      line-height: 24px;
+    }
+
+  }
+
 }
