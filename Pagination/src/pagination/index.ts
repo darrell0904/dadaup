@@ -2,6 +2,8 @@ import './styles/index.less';
 //  默认配置
 import defaults from "./defaults";
 import { PaginationConfig } from './types/index'
+import Select from '../select/index';
+
 // import './fonts/iconfont.less';
 
 class Pagination {
@@ -276,7 +278,31 @@ class Pagination {
       Pagination.addClass(UlEle, 'mini');
     }
 
+    // 放改变 size 的框
+    let LiEle = document.createElement("li");
+    LiEle.setAttribute('id', 'select');
+    LiEle.setAttribute('class', 'darrell-pagination-options');
+
+    UlEle.append(LiEle);
+
     this.pageElement.appendChild(UlEle);
+
+    new Select('#select', {
+      value: this.pageSize,
+      current: this.current,
+      onShowSizeChange: (current: number, size: number) => {
+        // pageSize
+        this.pageSize = size;
+        // 当前页数
+        this.current = current;
+        // 总页数
+        this.pageCount = Math.ceil(this.total / this.pageSize);
+
+        this.renderPages();
+        this.options.onShowSizeChange && this.options.onShowSizeChange(current, size);
+      }
+      ,
+    });
   }
 
   /**
@@ -433,8 +459,12 @@ const pagination = new Pagination('#pagination', {
   // showLessItems: true,
   // size: 'small',
   onChange: (page: any, pageSize: any) => {
+    // console.log('---page---', page);
+    // console.log('---pageSize---', pageSize);
+  },
+  onShowSizeChange: (page: any, size: any) => {
     console.log('---page---', page);
-    console.log('---pageSize---', pageSize);
+    console.log('---size---', size);
   }
 });
 
