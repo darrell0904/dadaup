@@ -12,7 +12,11 @@ export interface PaginationConfig {
 
   hideOnSinglePage?: boolean
 
-  itemRender?: (page: number, type: string, originalElement: HTMLElement) => HTMLElement
+  itemRender?: (
+    page: number,
+    type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next',
+    originalElement: any
+  ) => any
 
   pageSize?: number
 
