@@ -419,19 +419,39 @@ class Pagination {
     const current = this.current;
     const pageSize = this.pageSize;
     const total = this.total;
+    const pageCount = this.pageCount;
 
     const isDisabled = this.options.disabled;
     const isSmall = this.options.size;
     const showTotal = this.options.showTotal;
     const showSizeChanger = this.options.showSizeChanger;
     const showQuickJumper = this.options.showQuickJumper;
+    const hideOnSinglePage = this.options.hideOnSinglePage;
 
-    const fragment = this.showPages();
+    const simple = this.options.simple;
+
+    if (hideOnSinglePage) {
+      if (pageCount === 1) {
+        return false;
+      }
+    }
+
+    let fragment: any = ''; 
+
+    if (!simple) {
+      fragment = this.showPages();
+    } else {
+      fragment = this.simplePages();
+    }
 
     let UlEle = document.createElement("ul");
     UlEle.appendChild(fragment);
 
     UlEle.setAttribute('class', 'darrell-pagination');
+
+    if (simple) {
+      Pagination.addClass(UlEle, 'darrell-pagination-simple');
+    }
 
     if (isDisabled) {
       Pagination.addClass(UlEle, 'darrell-pagination-disabled');
@@ -441,7 +461,7 @@ class Pagination {
       Pagination.addClass(UlEle, 'mini');
     }
 
-    if (showTotal && typeof showTotal === 'function') {
+    if (showTotal && typeof showTotal === 'function' && !simple) {
       let LiTextEle = document.createElement("li");
       LiTextEle.setAttribute('class', 'darrell-pagination-total-text');
 
@@ -458,7 +478,7 @@ class Pagination {
       UlEle.insertBefore(LiTextEle, UlEle.firstChild);
     }
 
-    if (showSizeChanger) {
+    if (showSizeChanger && !simple) {
       // 放改变 size 的框
       let LiEle = document.createElement("li");
       LiEle.setAttribute('id', 'select');
@@ -467,24 +487,33 @@ class Pagination {
       UlEle.appendChild(LiEle);
     }
 
-    if (showQuickJumper) {
+    if (showQuickJumper && !simple) {
       let quickJumperEle = this.createQuickJumperDom();
       UlEle.appendChild(quickJumperEle);
     }
 
     this.pageElement.appendChild(UlEle);
 
-    if (showSizeChanger) {
+    if (showSizeChanger && !simple) {
       new Select('#select', {
         value: this.pageSize,
         currentPage: this.current,
+        disabled: isDisabled,
         onShowSizeChange: (current: number, size: number) => {
           // pageSize
           this.pageSize = size;
-          // 当前页数
-          this.current = current;
+
           // 总页数
           this.pageCount = Math.ceil(this.total / this.pageSize);
+
+          // 当前页数
+          if (current > this.pageCount) {
+            current = this.pageCount;
+          } else if (current < 1) {
+            current = 1
+          }
+
+          this.current = current;
 
           this.renderPages();
           this.options.onShowSizeChange && this.options.onShowSizeChange(current, size);
@@ -493,13 +522,57 @@ class Pagination {
     }
   }
 
-  private inputClick = (ev: any) => {
+  private getValidValue = (inputValue: any): number => {
+    const current = this.current;
+    return !inputValue || isNaN(inputValue) ? current : Number(inputValue);
+  }
+
+  // private inputChange = (ev: any) => {
+  //   let e = ev || window.event;
+  //   let target = e.target || e.srcElement;
+
+  //   const value = target.value;
+  // }
+
+  private inputKeyUp = (ev: any) => {
+    let e = ev || window.event;
+    const keyCode = e.keyCode;
+    const target = e.target || e.srcElement;
+    const value = target.value;
+
+    if (keyCode === 13) {
+      this.jumpToPage(this.getValidValue(value));
+    }
+  }
+
+  private inputBlur = (ev: any) => {
+    let e = ev || window.event;
+    let target = e.target || e.srcElement;
+    const value = target.value;
+    this.jumpToPage(this.getValidValue(value));
+  }
+
+  private jumpToPage = (value: any) => {
+    if (value > this.pageCount) {
+      value = this.pageCount;
+    } else if (value < 1) {
+      value = 1;
+    }
+
+    if (value === this.current) return;
+
+    this.current = value;
+
+    this.renderPages();
+    this.options.onChange && this.options.onChange(this.current, this.pageSize);
   }
 
   /**
    * 创建快速跳转页面的 html
    */
   private createQuickJumperDom () {
+    const isDisabled = this.options.disabled;
+
     let fragment = document.createDocumentFragment();
 
     let liEle = document.createElement("li");
@@ -509,13 +582,22 @@ class Pagination {
     liEle.setAttribute('class', 'darrell-pagination-options');
     liEle.setAttribute('id', 'quickJumper');
 
+    inputEle.setAttribute('type', 'text');
+
     divEle.setAttribute('class', 'darrell-pagination-options-quick-jumper');
 
     // divEle.innerHTML = `跳至<input type="text" onclick="${this.inputClick}" value />页`;
     let myText = document.createTextNode("跳至");
     let myText2 = document.createTextNode("页");
 
-    inputEle.onclick = this.inputClick;
+    // inputEle.oninput = this.inputChange;
+    inputEle.onkeyup = this.inputKeyUp;
+    inputEle.onblur = this.inputBlur;
+
+    if (isDisabled) {
+      inputEle.setAttribute('disabled', 'disabled');
+    }
+
 
     divEle.appendChild(myText);
     divEle.appendChild(inputEle);
@@ -596,6 +678,50 @@ class Pagination {
     this.addFragmentBefore(fragment, [Pagination.PAGE_INFOS[0]]);
 
     this.addFragmentAfter(fragment, [Pagination.PAGE_INFOS[1]]);
+
+    return fragment;
+  }
+
+  /**
+   * 简单的 分页 page style
+   */
+  private simplePages () {
+    const current = this.current;
+    const allPages = this.pageCount;
+
+    let fragment = document.createDocumentFragment();
+
+    let liPrevEle = document.createElement("li");
+
+    let liSimpleWrap = document.createElement("li");
+    let InputEle = document.createElement("input");
+    let SpanEle = document.createElement("span");
+
+    let liNextEle = document.createElement("li");
+
+    liPrevEle.setAttribute('class', 'darrell-pagination-prev');
+    liPrevEle.innerHTML = "<a  class='iconfont icon-left'></a>";
+
+    liNextEle.setAttribute('class', 'darrell-pagination-next');
+    liNextEle.innerHTML = "<a  class='iconfont icon-right'></a>";
+
+    liSimpleWrap.setAttribute('class', 'darrell-pagination-simple-pager');
+    InputEle.setAttribute('type', 'text');
+    InputEle.setAttribute('value', current);
+    SpanEle.setAttribute('class', 'darrell-pagination-slash');
+    SpanEle.innerHTML = '/';
+    let textEle = document.createTextNode(allPages);
+
+    liSimpleWrap.appendChild(InputEle);
+    liSimpleWrap.appendChild(SpanEle);
+    liSimpleWrap.appendChild(textEle);
+
+    fragment.appendChild(liPrevEle);
+    fragment.appendChild(liSimpleWrap);
+    fragment.appendChild(liNextEle);
+
+    InputEle.onkeyup = this.inputKeyUp;
+    InputEle.onblur = this.inputBlur;
 
     return fragment;
   }
@@ -688,13 +814,15 @@ const pagination = new Pagination('#pagination', {
   // },
   showSizeChanger: true,
   showQuickJumper: true,
+  hideOnSinglePage: true,
+  simple: false,
   onChange: (page: any, pageSize: any) => {
     console.log('---page---', page);
     console.log('---pageSize---', pageSize);
   },
   onShowSizeChange: (page: any, size: any) => {
-    console.log('---page---', page);
-    console.log('---size---', size);
+    console.log('---page--11-', page);
+    console.log('---size--11-', size);
   },
   // itemRender: (current: any, type: any, originalElement: any): any => {
   //   function createAEle (content: string) {

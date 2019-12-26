@@ -82,6 +82,16 @@ class Select {
     this.addEvent(element, type, handler)
   }
 
+  private bodyHideDropdown () {
+    const SelectValueElement = this.SelectValueElement;
+    const SelectDropdownElement = this.SelectDropdownElement;
+
+    if (!Select.hasClass(SelectDropdownElement, 'none')) {
+      Select.addClass(SelectDropdownElement, 'none');
+      Select.removeClass(SelectValueElement, 'darrell-open-select-dropdown');
+    }
+  }
+
   /**
    * 改变页数
    */
@@ -94,11 +104,13 @@ class Select {
     if (!isDisabled) {
       this.addEvent(SelectValueElement, 'click', this.ValueClickHandler.bind(this));
       this.addEvent(SelectDropdownElement, 'click', this.DropdownClickHandler.bind(this));
+      this.addEvent(this.$('body')[0], 'click', this.bodyHideDropdown.bind(this))
     }
   }
 
   private ValueClickHandler (ev: any) {
     let e = ev || window.event;
+    e.stopPropagation();
     const target = e.target || e.srcElement;
     const SelectDropdownElement = this.SelectDropdownElement;
     const parentNode = target.parentNode;
@@ -114,6 +126,7 @@ class Select {
 
   private DropdownClickHandler (ev: any) {
     let e = ev || window.event;
+    e.stopPropagation();
     const target = e.target || e.srcElement;
 
     const currentPage = this.options.currentPage;
